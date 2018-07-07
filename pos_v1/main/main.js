@@ -7,8 +7,7 @@ function printReceipt(tags) {
   //计算数量
   let typeAndNumberOfItems = calculatingTypeAndNumber(tags.map(tag=>splitItem(tag)));
   let itemsDetails = getItemsDetails(typeAndNumberOfItems, loadAllItems());
-  const promotions = loadPromotions();
-  itemsDetails = addPromotionStatus(itemsDetails, promotions);
+  itemsDetails = addPromotionStatus(itemsDetails, loadPromotions());
   itemsDetails = countItem(itemsDetails);
   itemsDetails = countAllItems(itemsDetails);
    print(itemsDetails);
@@ -42,14 +41,11 @@ function getItemsDetails(typeAndNumberOfItems, allItems) {
 
 function addPromotionStatus(itemsDetails, Promotions) {
   let barcode = Promotions[0].barcodes;
-  for (let tempitem of itemsDetails) {
-    for (let i = 0; i < barcode.length; i++) {
-      if (tempitem.code === barcode[i]) {
-        tempitem.status = 'Promotion';
-
-      }
+  itemsDetails.map(tempitem=> {
+    if(barcode.includes(tempitem.code)){
+      tempitem.status = 'Promotion';
     }
-  }
+  })
   return itemsDetails;
 }
 
