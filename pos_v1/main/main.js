@@ -6,8 +6,7 @@ const {loadAllItems,loadPromotions}=require('../spec/fixtures');
 function printReceipt(tags) {
   //计算数量
   let typeAndNumberOfItems = calculatingTypeAndNumber(tags.map(tag=>splitItem(tag)));
-  const allItems = loadAllItems();
-  let itemsDetails = getItemsDetails(typeAndNumberOfItems, allItems);
+  let itemsDetails = getItemsDetails(typeAndNumberOfItems, loadAllItems());
   const promotions = loadPromotions();
   itemsDetails = addPromotionStatus(itemsDetails, promotions);
   itemsDetails = countItem(itemsDetails);
@@ -30,17 +29,15 @@ function calculatingTypeAndNumber(items) {
 }
 
 function getItemsDetails(typeAndNumberOfItems, allItems) {
-  // for(let det of deatil)
-  for (let typeAndNumberOfItem of typeAndNumberOfItems) {
-    for (let item of allItems) {
+  typeAndNumberOfItems.map(typeAndNumberOfItem=>{
+    allItems.map(item=>{ 
       if (typeAndNumberOfItem.code === item.barcode) {
         typeAndNumberOfItem.name = item.name;
         typeAndNumberOfItem.unit = item.unit;
         typeAndNumberOfItem.price = item.price;
-      }
-    }
-  }
-  return typeAndNumberOfItems;
+      }})
+  })
+ return typeAndNumberOfItems;
 }
 
 function addPromotionStatus(itemsDetails, Promotions) {
