@@ -1,18 +1,30 @@
 'use strict';
+// const main = require('../main/main');
+ const { printReceipt,
+   calculatingTypeAndNumber,
+    getItemsDetails,
+    addPromotionStatus,
+    countItem,
+    countAllItems,
+    print
+    }=require('../main/main');
+    const { loadAllItems,
+        loadPromotions} = require ('./fixtures');
+
 
 
 describe('Function calculatingTypeAndNumber test',()=> {
   it('it should have same typeAndNumberOfItems', () => {
 
     const tags = [
-      'ITEM000001',
-      'ITEM000001',
-      'ITEM000001',
-      'ITEM000001',
-      'ITEM000001',
-      'ITEM000003-2.5',
-      'ITEM000005',
-      'ITEM000005-2',
+      {code: "ITEM000001", number: 1},
+      {code: "ITEM000001", number: 1},
+      {code: "ITEM000001", number: 1},
+      {code: "ITEM000001", number: 1},
+      {code: "ITEM000001", number: 1},
+     {code: "ITEM000003", number: 2.5},
+      {code: "ITEM000005", number: 1},
+      {code: "ITEM000005", number: 2}
     ];
 
     let typeAndNumberOfItems = calculatingTypeAndNumber(tags);
@@ -48,7 +60,7 @@ describe('Function getItemsDetails test',()=> {
 });
 
 
-describe('Function getPromotion test',()=> {
+describe('Function addPromotionStatus test',()=> {
   it('it should have same ItemsDetails', () => {
     const items=[
       {code: "ITEM000001", number: 5, name: "雪碧", unit: "瓶", price: 3}
@@ -58,7 +70,7 @@ describe('Function getPromotion test',()=> {
       {code: "ITEM000005", number: 3, name: "方便面", unit: "袋", price: 4.5}
     ]
     const promotions=loadPromotions();
-    const itemsDetails = getPromotion(items, promotions);
+    const itemsDetails = addPromotionStatus(items, promotions);
     const result=[
       {code: "ITEM000001", number: 5, name: "雪碧", unit: "瓶", price: 3,status:'Promotion'}
       ,

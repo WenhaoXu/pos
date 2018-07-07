@@ -1,12 +1,15 @@
 'use strict';
 
+const {loadAllItems,loadPromotions}=require('../spec/fixtures');
+'use strict';
+
 function printReceipt(tags) {
   //计算数量
-  let typeAndNumberOfItems = calculatingTypeAndNumber(tags);
+  let typeAndNumberOfItems = calculatingTypeAndNumber(tags.map(tag=>splitItem(tag)));
   const allItems = loadAllItems();
   let itemsDetails = getItemsDetails(typeAndNumberOfItems, allItems);
   const promotions = loadPromotions();
-  itemsDetails = getPromotion(itemsDetails, promotions);
+  itemsDetails = addPromotionStatus(itemsDetails, promotions);
   itemsDetails = countItem(itemsDetails);
   itemsDetails = countAllItems(itemsDetails);
    print(itemsDetails);
@@ -14,20 +17,15 @@ function printReceipt(tags) {
 }
 
 //计算数量
-function calculatingTypeAndNumber(tags) {
-
+function calculatingTypeAndNumber(items) {
   let typeAndNumberOfItems = [];
-
-  for (let barcode of tags) {
-    let tempId = splitItem(barcode);
-    let Iscontain = containId(tempId, typeAndNumberOfItems);
-    if (!Iscontain) {
+  items.map(barcode=>{ 
+    if (!containId(barcode, typeAndNumberOfItems)) {
       typeAndNumberOfItems.push({
-        code: tempId.code,
-        number: tempId.number
+        code: barcode.code,
+        number: barcode.number
       });
-    }
-  }
+    }})
   return typeAndNumberOfItems;
 }
 
@@ -45,7 +43,7 @@ function getItemsDetails(typeAndNumberOfItems, allItems) {
   return typeAndNumberOfItems;
 }
 
-function getPromotion(itemsDetails, Promotions) {
+function addPromotionStatus(itemsDetails, Promotions) {
   let barcode = Promotions[0].barcodes;
   for (let tempitem of itemsDetails) {
     for (let i = 0; i < barcode.length; i++) {
@@ -75,15 +73,15 @@ function countItem(itemsDetails) {
 
 function countAllItems(itemsDetails) {
   let count = 0;
-  let countfanal = 0;
+  let countWithoutPromotion = 0;
   for (let it of itemsDetails) {
     count = count + it.count;
-    countfanal = it.number * it.price + countfanal;
+    countWithoutPromotion = it.number * it.price + countWithoutPromotion;
   }
 
   itemsDetails.push({
     finalcount: count,
-    saved: countfanal - count
+    saved: countWithoutPromotion - count
   })
   return itemsDetails;
 }
@@ -132,4 +130,14 @@ function containId(tempId, typeAndNumberOfItems) {
   }
   }
   return isContain;
+}
+
+module.exports = {
+  printReceipt,
+    calculatingTypeAndNumber,
+    getItemsDetails,
+    addPromotionStatus,
+    countItem,
+    countAllItems,
+    print
 }
