@@ -66,19 +66,16 @@ function countItem(itemsDetails) {
 function countAllItems(itemsDetails) {
   let count = 0;
   let countWithoutPromotion = 0;
-  for (let it of itemsDetails) {
+  itemsDetails.map(it=> {
     count = count + it.count;
     countWithoutPromotion = it.number * it.price + countWithoutPromotion;
-  }
-
+  })
   itemsDetails.push({
     finalcount: count,
     saved: countWithoutPromotion - count
   })
   return itemsDetails;
 }
-
-
 function print(item) {
   let final = '***<没钱赚商店>收据***\n';
   for (let i = 0; i < item.length - 1; i++) {
