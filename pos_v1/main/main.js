@@ -13,7 +13,6 @@ function printReceipt(tags) {
    print(itemsDetails);
 
 }
-
 //计算数量
 function calculatingTypeAndNumber(items) {
   let typeAndNumberOfItems = [];
@@ -50,7 +49,7 @@ function addPromotionStatus(itemsDetails, Promotions) {
 }
 
 function countItem(itemsDetails) {
-  for (let it of itemsDetails) {
+  itemsDetails.map(it=>{
     let mycount;
     if (it.hasOwnProperty('status')) {
       mycount = (parseInt(it.number / 3) * 2 + it.number % 3) * it.price;
@@ -60,7 +59,7 @@ function countItem(itemsDetails) {
       mycount = it.number * it.price;
       it.count = mycount;
     }
-  }
+  })
   return itemsDetails;
 }
 
